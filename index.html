@@ -2,538 +2,711 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>uhrzeit – umgangssprache (dropdown)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Uhrzeit – Umgangssprache (Dropdown) 2./3. Klasse</title>
   <style>
-    :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f3f4f6;}
+    :root{
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:#f3f4f6;
+    }
     body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:14px;}
-    .app{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);padding:1.6rem 1.4rem;max-width:560px;width:100%;box-sizing:border-box;}
-    h1{margin:0 0 .4rem;text-align:center;font-size:1.6rem;}
-    .subtitle{text-align:center;color:#4b5563;margin-bottom:1rem;font-size:.95rem;}
-    .hidden{display:none;}
-    .center{text-align:center;}
-    .choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin:.7rem 0 .4rem;}
-    .choice-btn{padding:.9rem .6rem;border-radius:16px;border:2px solid #d1d5db;background:#f9fafb;font-size:1rem;font-weight:600;cursor:pointer;transition:background .15s,transform .05s,border-color .15s,box-shadow .15s;}
+    .app{
+      background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.10);
+      padding:1.4rem 1.2rem;max-width:680px;width:100%;box-sizing:border-box;
+    }
+    h1{margin:0 0 .35rem;text-align:center;font-size:1.45rem;}
+    .subtitle{margin:0 0 1rem;text-align:center;color:#4b5563;font-size:.95rem;line-height:1.35;}
+    .row{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;justify-content:center}
+    .choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin:.7rem 0;}
+    .choice-btn{
+      padding:.85rem .6rem;border-radius:14px;border:2px solid #d1d5db;background:#f9fafb;
+      font-size:1rem;font-weight:700;cursor:pointer;transition:.15s;
+    }
     .choice-btn.selected{background:#2563eb;color:#fff;border-color:#1d4ed8;box-shadow:0 5px 15px rgba(37,99,235,.35);}
-    .choice-btn:active{transform:translateY(1px);}
-    .selected-info{font-size:.85rem;color:#6b7280;text-align:center;min-height:1.2rem;margin:.2rem 0 .3rem;}
-    .primary-btn{margin-top:.8rem;width:100%;padding:.75rem 1rem;font-size:1.1rem;border-radius:999px;border:none;cursor:pointer;background:#2563eb;color:#fff;font-weight:700;}
-    .primary-btn:hover{background:#1d4ed8;}
+    .primary-btn{
+      width:100%;margin-top:.8rem;padding:.75rem 1rem;border-radius:999px;border:none;
+      background:#2563eb;color:#fff;font-weight:800;font-size:1.05rem;cursor:pointer;
+    }
     .primary-btn:disabled{background:#9ca3af;cursor:not-allowed;}
-    .secondary-btn{margin-top:.4rem;width:100%;padding:.65rem 1rem;font-size:1rem;border-radius:999px;border:1px solid #d1d5db;cursor:pointer;background:#f9fafb;color:#111827;font-weight:600;}
-    .secondary-btn:hover{background:#e5e7eb;border-color:#9ca3af;}
-    .progress{text-align:center;color:#6b7280;font-size:.9rem;margin-bottom:.4rem;}
-    .tag{display:inline-block;border-radius:999px;padding:.15rem .6rem;font-size:.8rem;background:#eff6ff;color:#1d4ed8;}
-    .clock-wrapper{display:flex;justify-content:center;margin-top:.6rem;}
-    #clock-canvas{background:#f9fafb;border-radius:50%;box-shadow:inset 0 0 5px rgba(0,0,0,.08);}
-    .answer-box{margin-top:1rem;border:1px solid #e5e7eb;background:#f9fafb;border-radius:14px;padding:.9rem;}
-    .answer-row{display:grid;grid-template-columns:1fr;gap:.6rem;}
-    @media (min-width:520px){.answer-row{grid-template-columns:1fr 1fr 1fr;}}
-    select{width:100%;padding:.7rem .6rem;border-radius:12px;border:2px solid #d1d5db;background:#fff;font-size:1.02rem;font-weight:650;color:#111827;outline:none;text-transform:lowercase;}
-    select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15);}
-    .equation{text-align:center;margin:.4rem 0 .2rem;font-size:1.05rem;color:#111827;font-weight:600;}
-    .feedback{min-height:1.4rem;margin-top:.55rem;font-weight:650;text-align:center;}
-    .feedback.ok{color:#15803d;}
-    .feedback.error{color:#b91c1c;}
-    .stats{margin-top:.9rem;font-size:.95rem;color:#374151;}
+    .secondary-btn{
+      width:100%;margin-top:.45rem;padding:.65rem 1rem;border-radius:999px;border:1px solid #d1d5db;
+      background:#f9fafb;color:#111827;font-weight:700;font-size:1rem;cursor:pointer;
+    }
+    .selected-info{min-height:1.2rem;text-align:center;color:#6b7280;font-size:.88rem;margin-top:.25rem}
+    .hidden{display:none;}
+    .progress{font-size:.92rem;color:#6b7280;text-align:center;margin:.2rem 0 .6rem;}
+    .tag{display:inline-block;border-radius:999px;padding:.12rem .65rem;font-size:.82rem;background:#eff6ff;color:#1d4ed8;font-weight:700}
+    .clock-wrap{display:flex;justify-content:center;margin:.55rem 0 .35rem;}
+    #clock{background:#f9fafb;border-radius:50%;box-shadow:inset 0 0 5px rgba(0,0,0,.08);max-width:240px;width:240px;height:240px}
+    .dropdowns{
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;align-items:end;margin:.8rem 0 .3rem;
+    }
+    label{font-size:.85rem;color:#6b7280;font-weight:700}
+    select{
+      width:100%;padding:.65rem .6rem;border-radius:12px;border:2px solid #d1d5db;background:#fff;
+      font-size:1.05rem;font-weight:800;letter-spacing:.02em;
+    }
+    .answer-line{
+      display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:.6rem;
+      font-size:1.02rem;color:#374151;
+    }
+    .feedback{min-height:1.4rem;text-align:center;font-weight:800;margin-top:.55rem}
+    .ok{color:#15803d;}
+    .bad{color:#b91c1c;}
+    .stats{margin-top:.7rem;font-size:.95rem;color:#374151;line-height:1.35}
+    @media (max-width:560px){
+      .dropdowns{grid-template-columns:1fr;gap:.65rem}
+      #clock{width:210px;height:210px}
+    }
   </style>
 </head>
 <body>
 <div class="app">
-  <h1>wie spät ist es?</h1>
-  <div class="subtitle">
-    lies die analoge uhr und wähle die uhrzeit <strong>in umgangssprache</strong>.<br>
-    beispiel: „fünf vor halb neun“, „fünf nach halb elf“, „viertel vor zwölf“, „ein uhr“
+  <h1>Uhrzeit – Umgangssprache</h1>
+  <p class="subtitle">
+    Schau die Uhr an und wähle die passende umgangssprachliche Zeit.<br>
+    Beispiel: <strong>fünf</strong> <strong>vor halb</strong> <strong>neun</strong>
+  </p>
+
+  <!-- START -->
+  <div id="start">
+    <div class="row" style="margin-top:.2rem;">
+      <div style="font-size:.92rem;color:#6b7280;font-weight:800;">Klasse</div>
+    </div>
+    <div class="choice-grid" id="gradeGrid">
+      <button class="choice-btn grade" data-grade="2">2. klasse</button>
+      <button class="choice-btn grade" data-grade="3">3. klasse</button>
+    </div>
+
+    <div class="row" style="margin-top:.2rem;">
+      <div style="font-size:.92rem;color:#6b7280;font-weight:800;">stimme (tts)</div>
+    </div>
+    <div class="row" style="margin-top:.35rem;">
+      <select id="voiceSelect" aria-label="stimme wählen"></select>
+    </div>
+
+    <div class="selected-info" id="startInfo">bitte klasse auswählen.</div>
+    <button class="primary-btn" id="startBtn" disabled>los!</button>
   </div>
 
-  <!-- start -->
-  <div id="start-screen">
-    <div class="center">
-      <p>bitte eine <strong>klasse</strong> und eine <strong>schwierigkeit</strong> auswählen.</p>
-    </div>
+  <!-- QUIZ -->
+  <div id="quiz" class="hidden">
+    <div class="progress" id="progress"></div>
+    <div class="row"><span class="tag" id="variantTag"></span></div>
 
-    <div class="center" style="margin-top:.5rem;">klasse</div>
-    <div class="choice-grid" id="grade-grid">
-      <button type="button" class="choice-btn grade-btn" data-grade="2">2. klasse</button>
-      <button type="button" class="choice-btn grade-btn" data-grade="3">3. klasse</button>
-    </div>
+    <div class="clock-wrap"><canvas id="clock" width="240" height="240"></canvas></div>
 
-    <div class="center" style="margin-top:1rem;">schwierigkeit</div>
-    <div class="choice-grid" id="difficulty-grid">
-      <button type="button" class="choice-btn difficulty-btn" data-diff="easy">einfach</button>
-      <button type="button" class="choice-btn difficulty-btn" data-diff="hard">schwierig</button>
-    </div>
-
-    <div class="selected-info" id="selected-info"></div>
-    <button class="primary-btn" id="start-btn" disabled>los!</button>
-  </div>
-
-  <!-- quiz -->
-  <div id="quiz-screen" class="hidden">
-    <div class="progress" id="progress-text"></div>
-    <div class="center">
-      <span class="tag" id="variant-label"></span>
-      <div class="equation">wähle die passende uhrzeit:</div>
-    </div>
-
-    <div class="clock-wrapper">
-      <canvas id="clock-canvas" width="220" height="220"></canvas>
-    </div>
-
-    <div class="answer-box">
-      <div class="answer-row">
-        <select id="sel-part1" aria-label="teil 1"></select>
-        <select id="sel-part2" aria-label="teil 2"></select>
-        <select id="sel-hour"  aria-label="stunde"></select>
+    <div class="dropdowns">
+      <div>
+        <label for="p1">minuten</label>
+        <select id="p1"></select>
       </div>
-      <button class="primary-btn" id="check-btn" style="margin-top:.8rem;">überprüfen</button>
-      <div class="feedback" id="feedback"></div>
+      <div>
+        <label for="p2">form</label>
+        <select id="p2"></select>
+      </div>
+      <div>
+        <label for="p3">stunde</label>
+        <select id="p3"></select>
+      </div>
     </div>
+
+    <div class="answer-line">
+      <button class="secondary-btn" id="speakBtn" style="max-width:320px;">🔊 zeit nochmals hören</button>
+      <button class="primary-btn" id="checkBtn" style="max-width:320px;">prüfen</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
 
     <div class="stats">
-      richtig: <span id="stat-correct">0</span> / <span id="stat-total">30</span><br>
-      falsche versuche: <span id="stat-wrong">0</span><br>
-      modus: <span id="stat-mode"></span>
+      richtig: <span id="statOk">0</span> / <span id="statTotal">20</span><br>
+      fehler: <span id="statBad">0</span>
     </div>
   </div>
 
-  <!-- result -->
-  <div id="result-screen" class="hidden center">
-    <h2>fertig! 🎉</h2>
-    <p id="result-summary"></p>
-    <p style="margin-top:.8rem; font-size:.9rem; color:#4b5563;">
-      wenn du fertig bist, klicke auf <strong>„fertig“</strong>, damit learningview den auftrag als erledigt markiert.<br>
-      oder klicke auf <strong>„weiter üben“</strong>.
+  <!-- RESULT -->
+  <div id="result" class="hidden" style="text-align:center;">
+    <h2 style="margin:.2rem 0 .35rem;">fertig! 🎉</h2>
+    <p id="summary" style="margin:.25rem 0 .8rem;color:#374151;"></p>
+    <p style="margin-top:0.3rem; font-size:0.9rem; color:#4b5563;line-height:1.35;">
+      wenn du mit deinem resultat zufrieden bist,<br>
+      klicke <strong>„fertig“</strong>, damit learningview den auftrag als erledigt markiert.
     </p>
-    <button class="primary-btn" id="finish-btn">fertig</button>
-    <button class="secondary-btn" id="restart-btn">weiter üben</button>
+    <button class="primary-btn" id="finishBtn">fertig</button>
+    <button class="secondary-btn" id="againBtn">weiter üben</button>
   </div>
 </div>
 
 <script>
-  const TOTAL_QUESTIONS = 30;
+  // -----------------------------
+  // Einstellungen
+  // -----------------------------
+  const TOTAL = 20;
 
-  const GRADE_LABELS = { 2: "2. klasse", 3: "3. klasse" };
-  const DIFF_LABELS = { easy: "einfach", hard: "schwierig" };
+  // 2. Klasse: volle/halbe/viertel + 5-min Schritte? -> du wolltest: "volle 5 minuten-schritte"
+  // Ich interpretiere:
+  // - 2. Klasse: Minuten nur in 5er-Schritten (0,5,10,...,55) + die umgangssprachlichen Formen, die dazu passen
+  // - 3. Klasse: ebenso, aber mehr "vor/nach" und "vor halb/nach halb" (immer 5er-Schritte)
+  // Wichtig: Bewertung muss "halb drei" korrekt erkennen (= 2:30) und nicht falsch werten.
+  //
+  // Zusätzlich: ALLE Dropdown-Wörter klein.
 
-  // dropdowns: ALLES klein
-  const PART1_OPTIONS = ["", "fünf", "zehn", "viertel", "zwanzig"];
-  const PART2_OPTIONS = ["", "nach", "vor", "halb", "punkt", "vor halb", "nach halb"];
-  const HOUR_OPTIONS_WORDS = ["eins","zwei","drei","vier","fünf","sechs","sieben","acht","neun","zehn","elf","zwölf"];
+  const HOUR_WORDS = ["eins","zwei","drei","vier","fünf","sechs","sieben","acht","neun","zehn","elf","zwölf"];
 
-  let selectedGrade = null;       // 2|3
-  let selectedDifficulty = null;  // easy|hard
+  const MIN_WORDS = ["", "fünf","zehn","viertel","zwanzig"]; // "" nur für "punkt" oder "halb"
+  const FORM_WORDS = ["punkt","nach","vor","halb","vor halb","nach halb"];
 
-  let questionsDone = 0;
-  let correctAnswers = 0;
-  let wrongAnswers = 0;
-  let usedQuestions = [];
-  let currentQuestion = null; // {hour, minute, label, correctSet:Set<string>, canonical:string}
+  // -----------------------------
+  // State
+  // -----------------------------
+  let grade = null; // "2" | "3"
+  let correct = 0, wrong = 0, done = 0;
+  let used = new Set();
+  let current = null; // {h, m}
+  let selectedVoice = null;
+  let voices = [];
 
-  // dom
-  const startScreen = document.getElementById("start-screen");
-  const quizScreen = document.getElementById("quiz-screen");
-  const resultScreen = document.getElementById("result-screen");
+  // -----------------------------
+  // DOM
+  // -----------------------------
+  const startEl = document.getElementById("start");
+  const quizEl = document.getElementById("quiz");
+  const resultEl = document.getElementById("result");
 
-  const gradeGrid = document.getElementById("grade-grid");
-  const difficultyGrid = document.getElementById("difficulty-grid");
-  const selectedInfo = document.getElementById("selected-info");
-  const startBtn = document.getElementById("start-btn");
+  const gradeGrid = document.getElementById("gradeGrid");
+  const startInfo = document.getElementById("startInfo");
+  const startBtn = document.getElementById("startBtn");
 
-  const progressText = document.getElementById("progress-text");
-  const variantLabel = document.getElementById("variant-label");
-  const feedback = document.getElementById("feedback");
+  const voiceSelect = document.getElementById("voiceSelect");
 
-  const statCorrect = document.getElementById("stat-correct");
-  const statTotal = document.getElementById("stat-total");
-  const statWrong = document.getElementById("stat-wrong");
-  const statMode = document.getElementById("stat-mode");
+  const progressEl = document.getElementById("progress");
+  const variantTag = document.getElementById("variantTag");
+  const canvas = document.getElementById("clock");
+  const ctx = canvas.getContext("2d");
 
-  const restartBtn = document.getElementById("restart-btn");
-  const finishBtn = document.getElementById("finish-btn");
-  const resultSummary = document.getElementById("result-summary");
+  const p1Sel = document.getElementById("p1");
+  const p2Sel = document.getElementById("p2");
+  const p3Sel = document.getElementById("p3");
 
-  const selPart1 = document.getElementById("sel-part1");
-  const selPart2 = document.getElementById("sel-part2");
-  const selHour  = document.getElementById("sel-hour");
-  const checkBtn = document.getElementById("check-btn");
+  const speakBtn = document.getElementById("speakBtn");
+  const checkBtn = document.getElementById("checkBtn");
+  const feedbackEl = document.getElementById("feedback");
 
-  const clockCanvas = document.getElementById("clock-canvas");
-  const clockCtx = clockCanvas.getContext("2d");
+  const statOk = document.getElementById("statOk");
+  const statBad = document.getElementById("statBad");
+  const statTotal = document.getElementById("statTotal");
 
-  // helpers
-  function randomInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
-  function randomIntStep(min, max, step){
-    const count = Math.floor((max-min)/step)+1;
-    return min + randomInt(0, count-1)*step;
+  const summaryEl = document.getElementById("summary");
+  const finishBtn = document.getElementById("finishBtn");
+  const againBtn = document.getElementById("againBtn");
+
+  // -----------------------------
+  // UI Helpers
+  // -----------------------------
+  function setFeedback(text, ok){
+    feedbackEl.textContent = text;
+    feedbackEl.className = "feedback " + (ok ? "ok" : "bad");
   }
-  function normSpaces(s){ return s.replace(/\s+/g," ").trim(); }
+  function clearFeedback(){
+    feedbackEl.textContent = "";
+    feedbackEl.className = "feedback";
+  }
 
-  function fillSelect(select, arr){
-    select.innerHTML = "";
-    arr.forEach(v=>{
+  // -----------------------------
+  // Voice / TTS
+  // -----------------------------
+  function loadVoices(){
+    if (!("speechSynthesis" in window)) {
+      voiceSelect.innerHTML = `<option value="">tts nicht verfügbar</option>`;
+      voiceSelect.disabled = true;
+      return;
+    }
+    voices = window.speechSynthesis.getVoices() || [];
+    // bevorzugt: deutsch, weiblich ist im Browser nicht zuverlässig erkennbar -> wir wählen "de" und dann erste passende
+    const deVoices = voices.filter(v => (v.lang || "").toLowerCase().startsWith("de"));
+    const list = deVoices.length ? deVoices : voices;
+
+    voiceSelect.innerHTML = "";
+    list.forEach((v, idx) => {
       const opt = document.createElement("option");
-      opt.value = v;
-      opt.textContent = (v === "") ? "—" : v; // alles klein!
-      select.appendChild(opt);
+      opt.value = String(idx);
+      opt.textContent = `${v.name} (${v.lang})`;
+      voiceSelect.appendChild(opt);
     });
-  }
-  fillSelect(selPart1, PART1_OPTIONS);
-  fillSelect(selPart2, PART2_OPTIONS);
-  fillSelect(selHour, ["", ...HOUR_OPTIONS_WORDS]);
 
-  function resetDropdowns(){
-    selPart1.value = "";
-    selPart2.value = "";
-    selHour.value = "";
+    selectedVoice = list[0] || null;
   }
 
-  function hourToWord(h){
-    const map = {1:"eins",2:"zwei",3:"drei",4:"vier",5:"fünf",6:"sechs",7:"sieben",8:"acht",9:"neun",10:"zehn",11:"elf",12:"zwölf"};
-    return map[h] || String(h);
-  }
-  function hourToWordEin(h){ return (h === 1) ? "ein" : hourToWord(h); }
-
-  function nextHourWord(word){
-    const order = ["eins","zwei","drei","vier","fünf","sechs","sieben","acht","neun","zehn","elf","zwölf"];
-    const idx = order.indexOf(word);
-    return idx === -1 ? null : order[(idx+1)%12];
+  function getSelectedVoice(){
+    if (!("speechSynthesis" in window)) return null;
+    const all = (window.speechSynthesis.getVoices() || []);
+    const de = all.filter(v => (v.lang || "").toLowerCase().startsWith("de"));
+    const list = de.length ? de : all;
+    const idx = Number(voiceSelect.value || 0);
+    return list[idx] || list[0] || null;
   }
 
-  // startauswahl
-  gradeGrid.querySelectorAll(".grade-btn").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const g = Number(btn.dataset.grade);
-      selectedGrade = (selectedGrade === g) ? null : g;
-      gradeGrid.querySelectorAll(".grade-btn").forEach(b=>{
-        b.classList.toggle("selected", Number(b.dataset.grade) === selectedGrade);
-      });
-      updateStartControls();
-    });
-  });
-
-  difficultyGrid.querySelectorAll(".difficulty-btn").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const d = btn.dataset.diff;
-      selectedDifficulty = (selectedDifficulty === d) ? null : d;
-      difficultyGrid.querySelectorAll(".difficulty-btn").forEach(b=>{
-        b.classList.toggle("selected", b.dataset.diff === selectedDifficulty);
-      });
-      updateStartControls();
-    });
-  });
-
-  function updateStartControls(){
-    if(!selectedGrade && !selectedDifficulty){
-      selectedInfo.textContent = "keine klasse und schwierigkeit ausgewählt.";
-      startBtn.disabled = true; return;
-    }
-    if(!selectedGrade){
-      selectedInfo.textContent = "bitte eine klasse auswählen.";
-      startBtn.disabled = true; return;
-    }
-    if(!selectedDifficulty){
-      selectedInfo.textContent = "bitte eine schwierigkeit auswählen.";
-      startBtn.disabled = true; return;
-    }
-    selectedInfo.textContent = `ausgewählt: ${GRADE_LABELS[selectedGrade]}, ${DIFF_LABELS[selectedDifficulty]}`;
-    startBtn.disabled = false;
-  }
-
-  startBtn.addEventListener("click", startTraining);
-
-  restartBtn.addEventListener("click", ()=>{
-    quizScreen.classList.add("hidden");
-    resultScreen.classList.add("hidden");
-    startScreen.classList.remove("hidden");
-  });
-
-  // learningview feedback
-  finishBtn.addEventListener("click", ()=>{
-    finishBtn.disabled = true;
-    finishBtn.textContent = "erledigt ✔";
+  function speak(text){
+    if (!("speechSynthesis" in window)) return;
     try{
-      if(window.parent && window.parent !== window){
-        window.parent.postMessage("AppSolved","*");
-      }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      const v = getSelectedVoice();
+      if (v) u.voice = v;
+      u.lang = v?.lang || "de-CH";
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
     }catch(e){
-      console.warn("learningview-rückmeldung nicht möglich:", e);
+      console.warn("tts fehler:", e);
     }
+  }
+
+  voiceSelect.addEventListener("change", () => {
+    selectedVoice = getSelectedVoice();
   });
 
-  checkBtn.addEventListener("click", checkAnswer);
-  [selPart1, selPart2, selHour].forEach(el=>{
-    el.addEventListener("keydown", (e)=>{
-      if(e.key === "Enter"){ e.preventDefault(); checkAnswer(); }
-    });
-  });
+  // voices laden (Browser teils async)
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+  loadVoices();
 
-  function startTraining(){
-    if(!selectedGrade || !selectedDifficulty) return;
+  // -----------------------------
+  // Clock
+  // -----------------------------
+  function drawClock(hour, minute){
+    const w = canvas.width, h = canvas.height;
+    const r = Math.min(w,h)/2 - 10;
+    const cx = w/2, cy = h/2;
 
-    questionsDone = 0;
-    correctAnswers = 0;
-    wrongAnswers = 0;
-    usedQuestions = [];
+    ctx.clearRect(0,0,w,h);
+    ctx.save();
+    ctx.translate(cx, cy);
 
-    statCorrect.textContent = "0";
-    statWrong.textContent = "0";
-    statTotal.textContent = String(TOTAL_QUESTIONS);
-    statMode.textContent = `${GRADE_LABELS[selectedGrade]} – ${DIFF_LABELS[selectedDifficulty]}`;
+    // face
+    ctx.beginPath();
+    ctx.arc(0,0,r,0,Math.PI*2);
+    ctx.fillStyle="#ffffff";
+    ctx.fill();
+    ctx.lineWidth=3;
+    ctx.strokeStyle="#111827";
+    ctx.stroke();
 
-    feedback.textContent = "";
-    feedback.className = "feedback";
+    // ticks
+    for(let i=0;i<60;i++){
+      const a = (Math.PI/30)*i - Math.PI/2;
+      const isHour = (i%5===0);
+      const inner = r - (isHour ? 18 : 10);
+      const outer = r - 4;
+      ctx.beginPath();
+      ctx.moveTo(inner*Math.cos(a), inner*Math.sin(a));
+      ctx.lineTo(outer*Math.cos(a), outer*Math.sin(a));
+      ctx.lineWidth = isHour ? 3 : 1.4;
+      ctx.strokeStyle="#111827";
+      ctx.stroke();
+    }
 
-    startScreen.classList.add("hidden");
-    resultScreen.classList.add("hidden");
-    quizScreen.classList.remove("hidden");
+    // center
+    ctx.beginPath();
+    ctx.arc(0,0,4,0,Math.PI*2);
+    ctx.fillStyle="#111827";
+    ctx.fill();
 
-    newQuestion();
+    // minute hand (blue)
+    const ma = (Math.PI/30)*minute - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo((r-24)*Math.cos(ma),(r-24)*Math.sin(ma));
+    ctx.lineWidth=5;
+    ctx.lineCap="round";
+    ctx.strokeStyle="#2563eb";
+    ctx.stroke();
+
+    // hour hand (red)
+    const h12 = hour % 12;
+    const ha = (Math.PI/6)*(h12 + minute/60) - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo((r-52)*Math.cos(ha),(r-52)*Math.sin(ha));
+    ctx.lineWidth=7;
+    ctx.lineCap="round";
+    ctx.strokeStyle="#ef4444";
+    ctx.stroke();
+
+    ctx.restore();
   }
 
-  function newQuestion(){
-    feedback.textContent = "";
-    feedback.className = "feedback";
-    resetDropdowns();
-
-    let q, tries = 0;
-    while(true){
-      q = generateTimeQuestion(selectedGrade, selectedDifficulty);
-      const key = `${q.hour}-${q.minute}-${selectedGrade}-${selectedDifficulty}`;
-      if(!usedQuestions.includes(key)){
-        usedQuestions.push(key);
-        break;
-      }
-      if(++tries > 450) break;
-    }
-
-    currentQuestion = q;
-    variantLabel.textContent = q.label;
-
-    drawClock(q.hour, q.minute);
-
-    progressText.textContent = `aufgabe ${questionsDone + 1} von ${TOTAL_QUESTIONS}`;
+  // -----------------------------
+  // Time ↔ dropdown logic (FIXED)
+  // -----------------------------
+  function hourNumToWord(h){ // 1..12
+    return HOUR_WORDS[(h-1) % 12];
+  }
+  function wordToHourNum(word){
+    const idx = HOUR_WORDS.indexOf(word);
+    return idx >= 0 ? idx+1 : null;
+  }
+  function nextHourNum(h){
+    return (h % 12) + 1;
   }
 
-  function checkAnswer(){
-    if(!currentQuestion) return;
+  // Generates the *canonical* colloquial phrase parts for a time (h:1..12, m:0..55 step 5)
+  // Returns {p1, p2, p3, spokenText}
+  // Important: "halb drei" means 2:30, so p3 = next hour word.
+  function timeToParts(h, m){
+    const hh = ((h-1)%12)+1;
+    const next = nextHourNum(hh);
 
-    const p1 = selPart1.value; // ""|fünf|zehn|viertel|zwanzig
-    const p2 = selPart2.value; // ""|nach|vor|halb|punkt|vor halb|nach halb
-    const h  = selHour.value;  // ""|eins..zwölf
+    // We only use 5-min increments
+    const p = {p1:"", p2:"", p3:"", spokenText:""};
 
-    if(!p2 || !h){
-      feedback.textContent = "bitte mindestens teil 2 und die stunde auswählen.";
-      feedback.className = "feedback error";
-      return;
+    if (m === 0){
+      p.p1 = "";
+      p.p2 = "punkt";
+      p.p3 = hourNumToWord(hh);
+      p.spokenText = `punkt ${p.p3} uhr`;
+      return p;
     }
 
-    const built = buildPhraseFromDropdown(p1, p2, h);
-    if(!built){
-      feedback.textContent = "diese kombination passt nicht. (bei „halb / vor halb / nach halb“ bitte kein „fünf/zehn/…“ wählen.)";
-      feedback.className = "feedback error";
-      return;
+    if (m === 30){
+      p.p1 = "";
+      p.p2 = "halb";
+      p.p3 = hourNumToWord(next);         // halb -> NEXT hour
+      p.spokenText = `halb ${p.p3}`;
+      return p;
     }
 
-    const ok = currentQuestion.correctSet.has(built);
-
-    if(ok){
-      correctAnswers++;
-      statCorrect.textContent = String(correctAnswers);
-      feedback.textContent = "richtig! 👍";
-      feedback.className = "feedback ok";
-    }else{
-      wrongAnswers++;
-      statWrong.textContent = String(wrongAnswers);
-      feedback.textContent = "leider falsch. richtig wäre z.b.: " + currentQuestion.canonical;
-      feedback.className = "feedback error";
+    // 5..20 after
+    if (m === 5 || m === 10 || m === 15 || m === 20){
+      p.p1 = (m===5?"fünf":m===10?"zehn":m===15?"viertel":"zwanzig");
+      p.p2 = "nach";
+      p.p3 = hourNumToWord(hh);
+      p.spokenText = `${p.p1} nach ${p.p3}`;
+      return p;
     }
 
-    questionsDone++;
-    if(questionsDone >= TOTAL_QUESTIONS){
-      setTimeout(endTraining, 700);
-    }else{
-      setTimeout(newQuestion, 700);
+    // 25 -> five before half next
+    if (m === 25){
+      p.p1 = "fünf";
+      p.p2 = "vor halb";
+      p.p3 = hourNumToWord(next);         // vor halb -> NEXT hour
+      p.spokenText = `${p.p1} vor halb ${p.p3}`;
+      return p;
     }
+
+    // 35 -> five after half next
+    if (m === 35){
+      p.p1 = "fünf";
+      p.p2 = "nach halb";
+      p.p3 = hourNumToWord(next);         // nach halb -> NEXT hour
+      p.spokenText = `${p.p1} nach halb ${p.p3}`;
+      return p;
+    }
+
+    // 40,45,50,55 -> before next
+    if (m === 40 || m === 45 || m === 50 || m === 55){
+      p.p1 = (m===40?"zwanzig":m===45?"viertel":m===50?"zehn":"fünf");
+      p.p2 = "vor";
+      p.p3 = hourNumToWord(next);         // vor -> NEXT hour
+      p.spokenText = `${p.p1} vor ${p.p3}`;
+      return p;
+    }
+
+    // fallback: should not occur
+    p.p1 = "";
+    p.p2 = "punkt";
+    p.p3 = hourNumToWord(hh);
+    p.spokenText = `punkt ${p.p3} uhr`;
+    return p;
   }
 
-  // ✅ verbessert: p1+p2 korrekt für „vor halb / nach halb“
-  // beispiel 08:25 -> "fünf" + "vor halb" + "neun"
-  // beispiel 10:35 -> "fünf" + "nach halb" + "elf"
-  function buildPhraseFromDropdown(p1, p2, hourWord){
-    hourWord = normSpaces(hourWord);
+  // Parse dropdown selection to a time {h, m} in 12h clock (h 1..12)
+  // This is the CRITICAL fixed part:
+  // - "halb X" => (X-1):30
+  // - "fünf vor halb X" => (X-1):25
+  // - "fünf nach halb X" => (X-1):35
+  // - "fünf nach X" => X:05 etc.
+  // - "fünf vor X" => (X-1):55 etc.
+  // - "punkt X" => X:00
+  function partsToTime(p1, p2, p3){
+    const H = wordToHourNum(p3);
+    if (!H) return null;
 
-    // punkt -> "<ein> uhr"
-    if(p2 === "punkt"){
-      if(p1) return null;
-      const hEin = (hourWord === "eins") ? "ein" : hourWord;
-      return normSpaces(`${hEin} uhr`);
+    // normalize p1 empty
+    const minutesWord = (p1 || "").trim();
+
+    if (p2 === "punkt"){
+      if (minutesWord !== "") return null;
+      return {h: H, m: 0};
     }
 
-    // halb -> braucht KEIN p1, und nimmt nächste stunde
-    if(p2 === "halb"){
-      if(p1) return null;
-      const next = nextHourWord(hourWord);
-      if(!next) return null;
-      return normSpaces(`halb ${next}`);
+    if (p2 === "halb"){
+      if (minutesWord !== "") return null;
+      // half to H => (H-1):30
+      const base = (H === 1) ? 12 : (H - 1);
+      return {h: base, m: 30};
     }
 
-    // vor halb / nach halb -> MUSS p1 haben, nimmt nächste stunde
-    if(p2 === "vor halb" || p2 === "nach halb"){
-      if(!p1) return null;
-      const next = nextHourWord(hourWord);
-      if(!next) return null;
-      return normSpaces(`${p1} ${p2} ${next}`);
+    if (p2 === "vor halb" || p2 === "nach halb"){
+      if (!minutesWord) return null;
+      if (minutesWord !== "fünf") return null; // in deinem Dropdown gibt's hier nur "fünf"
+      const base = (H === 1) ? 12 : (H - 1);
+      return {h: base, m: (p2 === "vor halb") ? 25 : 35};
     }
 
-    // vor / nach -> MUSS p1 haben, nimmt aktuelle stunde
-    if(p2 === "vor" || p2 === "nach"){
-      if(!p1) return null;
-      return normSpaces(`${p1} ${p2} ${hourWord}`);
+    if (p2 === "nach"){
+      if (!minutesWord) return null;
+      const map = {"fünf":5,"zehn":10,"viertel":15,"zwanzig":20};
+      if (!(minutesWord in map)) return null;
+      return {h: H, m: map[minutesWord]};
+    }
+
+    if (p2 === "vor"){
+      if (!minutesWord) return null;
+      const map = {"fünf":55,"zehn":50,"viertel":45,"zwanzig":40};
+      if (!(minutesWord in map)) return null;
+      // these are minutes before NEXT hour, so base hour is H-1
+      const base = (H === 1) ? 12 : (H - 1);
+      return {h: base, m: map[minutesWord]};
     }
 
     return null;
   }
 
-  function endTraining(){
-    quizScreen.classList.add("hidden");
-    resultScreen.classList.remove("hidden");
+  // -----------------------------
+  // Dropdown fill
+  // -----------------------------
+  function fillDropdowns(){
+    // p1
+    p1Sel.innerHTML = "";
+    MIN_WORDS.forEach(w=>{
+      const opt = document.createElement("option");
+      opt.value = w;
+      opt.textContent = (w === "") ? "—" : w; // UI: dash, stored as ""
+      p1Sel.appendChild(opt);
+    });
 
-    const quote = (correctAnswers / TOTAL_QUESTIONS * 100).toFixed(0);
-    const modeText = `${GRADE_LABELS[selectedGrade]}, ${DIFF_LABELS[selectedDifficulty]}`;
+    // p2
+    p2Sel.innerHTML = "";
+    FORM_WORDS.forEach(w=>{
+      const opt = document.createElement("option");
+      opt.value = w;
+      opt.textContent = w;
+      p2Sel.appendChild(opt);
+    });
 
-    resultSummary.innerHTML =
-      `du hast <strong>${TOTAL_QUESTIONS}</strong> uhrzeiten im modus <strong>${modeText}</strong> gelöst.<br>` +
-      `davon waren <strong>${correctAnswers}</strong> richtig (<strong>${quote}%</strong>).<br>` +
-      `du hattest insgesamt <strong>${wrongAnswers}</strong> falsche versuche.`;
+    // p3
+    p3Sel.innerHTML = "";
+    HOUR_WORDS.forEach(w=>{
+      const opt = document.createElement("option");
+      opt.value = w;
+      opt.textContent = w;
+      p3Sel.appendChild(opt);
+    });
+
+    // defaults
+    p1Sel.value = "";
+    p2Sel.value = "punkt";
+    p3Sel.value = "eins";
   }
 
-  // aufgabengenerator
-  function generateTimeQuestion(grade, difficulty){
-    let hour, minute, label;
+  function applyConstraintHints(){
+    // Optional: leichte UI-Assistenz:
+    // wenn form "punkt" oder "halb": minuten dropdown automatisch auf "—"
+    const p2 = p2Sel.value;
+    if (p2 === "punkt" || p2 === "halb"){
+      p1Sel.value = "";
+    } else if (p2 === "vor halb" || p2 === "nach halb"){
+      if (p1Sel.value !== "fünf") p1Sel.value = "fünf";
+    }
+  }
 
-    if(grade === 2){
-      if(difficulty === "easy"){
-        hour = randomInt(1,12);
-        minute = Math.random() < 0.5 ? 0 : 30;
-        label = "volle und halbe stunden";
-      }else{
-        const minuteChoices = [0,10,15,20,25,30,35,40,45,50,55];
-        hour = randomInt(1,12);
-        minute = minuteChoices[randomInt(0, minuteChoices.length-1)];
-        label = "umgangssprache-mix (inkl. vor/nach halb)";
+  p2Sel.addEventListener("change", applyConstraintHints);
+
+  // -----------------------------
+  // Task generation
+  // -----------------------------
+  function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+  function randStep(min,max,step){
+    const count = Math.floor((max-min)/step)+1;
+    return min + randInt(0,count-1)*step;
+  }
+
+  function generateTime(){
+    // both grades use 5-minute steps, but we can limit 2nd grade to easier times if desired
+    // You asked: menu 3. klasse (minutenschritte) oder 2. klasse (volle 5 minuten-schritte)
+    // -> beide sind 5er Schritte, aber 2. klasse: eher ohne 40/45/50/55? (sonst ist's oft zu schwer)
+    // Ich mache:
+    // - 2. klasse: {0,5,10,15,20,25,30,35} (bis nach halb) + gelegentlich 40/45 (selten)
+    // - 3. klasse: alle 0..55 in 5er Schritten
+    const hour = randInt(1,12);
+    let minute;
+
+    if (grade === "2"){
+      const easier = [0,5,10,15,20,25,30,35];
+      minute = easier[randInt(0, easier.length-1)];
+    } else {
+      minute = randStep(0,55,5);
+    }
+    return {h: hour, m: minute};
+  }
+
+  function makeKey(t){ return `${t.h}:${t.m}`; }
+
+  function nextTask(){
+    clearFeedback();
+    let t, tries = 0;
+    do{
+      t = generateTime();
+      tries++;
+      if (tries > 500) break;
+    } while (used.has(makeKey(t)));
+
+    used.add(makeKey(t));
+    current = t;
+
+    drawClock(current.h, current.m);
+
+    const parts = timeToParts(current.h, current.m);
+    variantTag.textContent = (grade === "2") ? "2. klasse" : "3. klasse";
+    progressEl.textContent = `aufgabe ${done+1} von ${TOTAL}`;
+
+    // reset dropdowns to neutral
+    p1Sel.value = "";
+    p2Sel.value = "punkt";
+    p3Sel.value = "eins";
+    applyConstraintHints();
+
+    // speak task
+    speak(parts.spokenText);
+  }
+
+  function isSameTime(a,b){
+    if (!a || !b) return false;
+    return a.h === b.h && a.m === b.m;
+  }
+
+  function checkAnswer(){
+    if (!current) return;
+
+    const p1 = (p1Sel.value || "").trim();
+    const p2 = (p2Sel.value || "").trim();
+    const p3 = (p3Sel.value || "").trim();
+
+    const guess = partsToTime(p1, p2, p3);
+    const correctParts = timeToParts(current.h, current.m);
+
+    if (!guess){
+      wrong++;
+      statBad.textContent = String(wrong);
+      setFeedback("das passt nicht zusammen.", false);
+      return;
+    }
+
+    if (isSameTime(guess, current)){
+      correct++;
+      statOk.textContent = String(correct);
+      setFeedback("richtig! 👍", true);
+    } else {
+      wrong++;
+      statBad.textContent = String(wrong);
+      setFeedback(`leider falsch. korrekt wäre: ${correctParts.spokenText}`, false);
+    }
+
+    done++;
+    if (done >= TOTAL){
+      end();
+    } else {
+      setTimeout(nextTask, 700);
+    }
+  }
+
+  function end(){
+    quizEl.classList.add("hidden");
+    resultEl.classList.remove("hidden");
+
+    const pct = Math.round((correct / TOTAL) * 100);
+    summaryEl.innerHTML =
+      `du hast <strong>${TOTAL}</strong> uhrzeiten gelöst.<br>`+
+      `richtig: <strong>${correct}</strong> (${pct}%), fehler: <strong>${wrong}</strong>.`;
+  }
+
+  // -----------------------------
+  // Start / navigation
+  // -----------------------------
+  gradeGrid.querySelectorAll(".grade").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const g = btn.dataset.grade;
+      grade = (grade === g) ? null : g;
+
+      gradeGrid.querySelectorAll(".grade").forEach(b=>{
+        b.classList.toggle("selected", b.dataset.grade === grade);
+      });
+
+      if (!grade){
+        startInfo.textContent = "bitte klasse auswählen.";
+        startBtn.disabled = true;
+      } else {
+        startInfo.textContent = `ausgewählt: ${grade}. klasse`;
+        startBtn.disabled = false;
       }
-    }else{
-      // 3. klasse: 5er-schritte inkl. 25/35/55 usw.
-      hour = randomInt(1,12);
-      minute = randomIntStep(0,55,5);
-      label = (difficulty === "easy") ? "5-minuten-schritte" : "5-minuten-schritte (mix)";
+    });
+  });
+
+  startBtn.addEventListener("click", ()=>{
+    if (!grade) return;
+
+    // reset state
+    correct = 0; wrong = 0; done = 0;
+    used = new Set();
+    current = null;
+
+    statOk.textContent = "0";
+    statBad.textContent = "0";
+    statTotal.textContent = String(TOTAL);
+
+    startEl.classList.add("hidden");
+    resultEl.classList.add("hidden");
+    quizEl.classList.remove("hidden");
+
+    fillDropdowns();
+    applyConstraintHints();
+    nextTask();
+  });
+
+  speakBtn.addEventListener("click", ()=>{
+    if (!current) return;
+    const parts = timeToParts(current.h, current.m);
+    speak(parts.spokenText);
+  });
+
+  checkBtn.addEventListener("click", checkAnswer);
+
+  againBtn.addEventListener("click", ()=>{
+    resultEl.classList.add("hidden");
+    startEl.classList.remove("hidden");
+  });
+
+  finishBtn.addEventListener("click", ()=>{
+    finishBtn.disabled = true;
+    finishBtn.textContent = "erledigt ✔";
+    try{
+      if (window.parent && window.parent !== window){
+        window.parent.postMessage("AppSolved","*");
+      }
+    }catch(e){
+      console.warn("learningview postmessage fehlgeschlagen:", e);
     }
-
-    const forms = timeToDropdownForms(hour, minute);
-    return { hour, minute, label, correctSet: forms.set, canonical: forms.canonical };
-  }
-
-  // ✅ verbessert: erzeugt EXAKT die umgangsformen passend zu dropdowns,
-  // inkl. "fünf vor halb" und "fünf nach halb"
-  function timeToDropdownForms(hour, minute){
-    const h = ((hour - 1) % 12) + 1;
-    const nextH = (h % 12) + 1;
-
-    const hourWord = hourToWord(h);
-    const nextWord = hourToWord(nextH);
-
-    const set = new Set();
-    let canonical = "";
-
-    function add(s){
-      const t = normSpaces(s.toLowerCase());
-      set.add(t);
-      if(!canonical) canonical = t;
-    }
-
-    if(minute === 0){
-      add(`${hourToWordEin(h)} uhr`);
-      return { set, canonical };
-    }
-
-    switch(minute){
-      case 5:  add(`fünf nach ${hourWord}`); break;
-      case 10: add(`zehn nach ${hourWord}`); break;
-      case 15: add(`viertel nach ${hourWord}`); break;
-      case 20: add(`zwanzig nach ${hourWord}`); break;
-
-      // vor/nach halb:
-      case 25: add(`fünf vor halb ${nextWord}`); break;
-      case 30: add(`halb ${nextWord}`); break;
-      case 35: add(`fünf nach halb ${nextWord}`); break;
-
-      case 40: add(`zwanzig vor ${nextWord}`); break;
-      case 45: add(`viertel vor ${nextWord}`); break;
-      case 50: add(`zehn vor ${nextWord}`); break;
-      case 55: add(`fünf vor ${nextWord}`); break;
-
-      default:
-        // sollte bei 5er-schritten nie passieren
-        add(`${hourToWordEin(h)} uhr`);
-    }
-
-    return { set, canonical };
-  }
-
-  // analoge uhr zeichnen
-  function drawClock(hour, minute){
-    const ctx = clockCtx;
-    const w = clockCanvas.width;
-    const h = clockCanvas.height;
-    const radius = Math.min(w,h)/2 - 10;
-    const cx = w/2, cy = h/2;
-
-    ctx.clearRect(0,0,w,h);
-    ctx.save(); ctx.translate(cx,cy);
-
-    ctx.beginPath();
-    ctx.arc(0,0,radius,0,Math.PI*2);
-    ctx.fillStyle="#ffffff"; ctx.fill();
-    ctx.lineWidth=3; ctx.strokeStyle="#111827"; ctx.stroke();
-
-    for(let i=0;i<12;i++){
-      const angle = (Math.PI/6)*i - Math.PI/2;
-      const inner = radius - 10;
-      const outer = radius - (i%3===0 ? 18 : 14);
-      ctx.beginPath();
-      ctx.moveTo(inner*Math.cos(angle), inner*Math.sin(angle));
-      ctx.lineTo(outer*Math.cos(angle), outer*Math.sin(angle));
-      ctx.lineWidth = (i%3===0)?3:1.5;
-      ctx.strokeStyle="#111827";
-      ctx.stroke();
-    }
-
-    ctx.beginPath();
-    ctx.arc(0,0,4,0,Math.PI*2);
-    ctx.fillStyle="#111827"; ctx.fill();
-
-    const minuteAngle = (Math.PI/30)*minute - Math.PI/2;
-    ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.lineTo((radius-22)*Math.cos(minuteAngle),(radius-22)*Math.sin(minuteAngle));
-    ctx.lineWidth=3; ctx.strokeStyle="#1f2937"; ctx.stroke();
-
-    const hourIn12 = hour % 12;
-    const hourAngle = (Math.PI/6)*(hourIn12 + minute/60) - Math.PI/2;
-    ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.lineTo((radius-45)*Math.cos(hourAngle),(radius-45)*Math.sin(hourAngle));
-    ctx.lineWidth=4; ctx.strokeStyle="#111827"; ctx.stroke();
-
-    ctx.restore();
-  }
+  });
 
   // init
   (function init(){
-    statTotal.textContent = String(TOTAL_QUESTIONS);
-    updateStartControls();
+    fillDropdowns();
+    // neutral clock
     drawClock(12,0);
+    startBtn.disabled = true;
+    startInfo.textContent = "bitte klasse auswählen.";
+    statTotal.textContent = String(TOTAL);
   })();
 </script>
 </body>

@@ -68,6 +68,11 @@
     cursor:pointer;
   }
   button:active{ transform:translateY(1px); }
+  button:disabled{
+    background:#9ca3af;
+    cursor:not-allowed;
+  }
+
   .feedback{
     text-align:center;
     font-weight:800;
@@ -83,59 +88,91 @@
     color:#6b7280;
     font-size:.85rem;
   }
+
+  .progress{
+    text-align:center;
+    font-size:.9rem;
+    color:#6b7280;
+    margin-top:.2rem;
+  }
+
+  .hidden{ display:none; }
+
+  .result{
+    text-align:center;
+    padding:1rem 0 .2rem;
+  }
+  .result h2{ margin:.2rem 0 .4rem; }
+  .result p{ color:#374151; margin:.2rem 0; }
 </style>
 </head>
 
 <body>
 <div class="app">
-  <h1>Wie spät ist es?</h1>
-  <div class="subtitle">Lies die Uhr ab und beschreibe die Zeit in Umgangssprache (ohne Audio).</div>
+  <div id="quiz-screen">
+    <h1>Wie spät ist es?</h1>
+    <div class="subtitle">Lies die Uhr ab und beschreibe die Zeit in Umgangssprache (ohne Audio).</div>
 
-  <div class="clock-wrap">
-    <canvas id="clock" width="260" height="260"></canvas>
+    <div class="progress" id="progress">aufgabe 1 von 30</div>
+
+    <div class="clock-wrap">
+      <canvas id="clock" width="260" height="260"></canvas>
+    </div>
+
+    <div class="dropdowns">
+      <div>
+        <label>minuten</label>
+        <select id="sel-min">
+          <option value="">—</option>
+          <option value="fünf">fünf</option>
+          <option value="zehn">zehn</option>
+          <option value="viertel">viertel</option>
+          <option value="zwanzig">zwanzig</option>
+        </select>
+      </div>
+
+      <div>
+        <label>form</label>
+        <select id="sel-form">
+          <option value="punkt">punkt</option>
+          <option value="nach">nach</option>
+          <option value="vor">vor</option>
+          <option value="halb">halb</option>
+          <option value="vor halb">vor halb</option>
+          <option value="nach halb">nach halb</option>
+        </select>
+      </div>
+
+      <div>
+        <label>stunde</label>
+        <select id="sel-hour">
+          <option>eins</option><option>zwei</option><option>drei</option>
+          <option>vier</option><option>fünf</option><option>sechs</option>
+          <option>sieben</option><option>acht</option><option>neun</option>
+          <option>zehn</option><option>elf</option><option>zwölf</option>
+        </select>
+      </div>
+    </div>
+
+    <button id="btn-check" type="button">prüfen</button>
+    <div id="feedback" class="feedback"></div>
+    <div class="tiny" id="hint"></div>
   </div>
 
-  <div class="dropdowns">
-    <div>
-      <label>minuten</label>
-      <select id="sel-min">
-        <option value="">—</option>
-        <option value="fünf">fünf</option>
-        <option value="zehn">zehn</option>
-        <option value="viertel">viertel</option>
-        <option value="zwanzig">zwanzig</option>
-      </select>
-    </div>
-
-    <div>
-      <label>form</label>
-      <select id="sel-form">
-        <option value="punkt">punkt</option>
-        <option value="nach">nach</option>
-        <option value="vor">vor</option>
-        <option value="halb">halb</option>
-        <option value="vor halb">vor halb</option>
-        <option value="nach halb">nach halb</option>
-      </select>
-    </div>
-
-    <div>
-      <label>stunde</label>
-      <select id="sel-hour">
-        <option>eins</option><option>zwei</option><option>drei</option>
-        <option>vier</option><option>fünf</option><option>sechs</option>
-        <option>sieben</option><option>acht</option><option>neun</option>
-        <option>zehn</option><option>elf</option><option>zwölf</option>
-      </select>
-    </div>
+  <div id="result-screen" class="hidden result">
+    <h2>fertig! 🎉</h2>
+    <p id="result-text"></p>
+    <p class="tiny" style="margin-top:.6rem;">
+      klicke auf <strong>„fertig“</strong>, damit LearningView die aufgabe als erledigt markiert.
+    </p>
+    <button id="btn-finish" type="button">fertig</button>
   </div>
-
-  <button id="btn-check" type="button">prüfen</button>
-  <div id="feedback" class="feedback"></div>
-  <div class="tiny" id="hint"></div>
 </div>
 
 <script>
+  // ======= Konfiguration =======
+  const TOTAL_TASKS = 30;
+
   // ======= Daten / Helpers =======
   const HOUR_WORDS = ["eins","zwei","drei","vier","fünf","sechs","sieben","acht","neun","zehn","elf","zwölf"];
 
@@ -149,11 +186,28 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  // erlaubte Minuten (du kannst das später nach Klasse filtern)
   const ALLOWED_MINUTES = [0,5,10,15,20,25,30,35,40,45,50,55];
 
   // ======= State =======
   let current = { h: 12, m: 0 };
+  let taskIndex = 0;     // 0..29
+  let correctCount = 0;
+
+  // ======= DOM =======
+  const quizScreen = document.getElementById("quiz-screen");
+  const resultScreen = document.getElementById("result-screen");
+  const progressEl = document.getElementById("progress");
+
+  const selMin = document.getElementById("sel-min");
+  const selForm = document.getElementById("sel-form");
+  const selHour = document.getElementById("sel-hour");
+
+  const fb = document.getElementById("feedback");
+  const hint = document.getElementById("hint");
+
+  const btnCheck = document.getElementById("btn-check");
+  const btnFinish = document.getElementById("btn-finish");
+  const resultText = document.getElementById("result-text");
 
   // ======= Clock Drawing =======
   const canvas = document.getElementById("clock");
@@ -168,10 +222,10 @@
 
     ctx.clearRect(0,0,W,H);
 
-    // Face
     ctx.save();
     ctx.translate(cx, cy);
 
+    // Face
     ctx.beginPath();
     ctx.arc(0,0,R,0,Math.PI*2);
     ctx.fillStyle = "#ffffff";
@@ -223,21 +277,28 @@
   }
 
   // ======= Task generation =======
+  function updateProgress(){
+    progressEl.textContent = `aufgabe ${taskIndex + 1} von ${TOTAL_TASKS}`;
+  }
+
+  function resetInputs(){
+    selMin.value = "";
+    selForm.value = "punkt";
+    selHour.value = "eins";
+  }
+
   function newTask(){
     const h = randInt(1, 12);
     const m = ALLOWED_MINUTES[randInt(0, ALLOWED_MINUTES.length-1)];
     current = { h, m };
     drawClock(current.h, current.m);
 
-    // reset UI
-    document.getElementById("feedback").textContent = "";
-    document.getElementById("feedback").className = "feedback";
-    document.getElementById("hint").textContent = "";
+    fb.textContent = "";
+    fb.className = "feedback";
+    hint.textContent = "";
 
-    // reset dropdowns
-    document.getElementById("sel-min").value = "";
-    document.getElementById("sel-form").value = "punkt";
-    document.getElementById("sel-hour").value = "eins";
+    resetInputs();
+    updateProgress();
   }
 
   // ======= Convert dropdowns -> (h,m) =======
@@ -246,54 +307,67 @@
     let h, m;
 
     if(formWord === "punkt"){
-      h = H;
-      m = 0;
+      h = H; m = 0;
       return { h, m, valid:true };
     }
 
     if(formWord === "halb"){
-      h = prevHour(H);
-      m = 30;
+      h = prevHour(H); m = 30;
       return { h, m, valid:true };
     }
 
     if(formWord === "vor halb"){
-      h = prevHour(H);
-      m = 25;
+      h = prevHour(H); m = 25;
       return { h, m, valid:true };
     }
 
     if(formWord === "nach halb"){
-      h = prevHour(H);
-      m = 35;
+      h = prevHour(H); m = 35;
       return { h, m, valid:true };
     }
 
     if(formWord === "nach"){
       if(!MIN_AFTER[minWord]) return { valid:false };
-      h = H;
-      m = MIN_AFTER[minWord];
+      h = H; m = MIN_AFTER[minWord];
       return { h, m, valid:true };
     }
 
     if(formWord === "vor"){
       if(!MIN_BEFORE[minWord]) return { valid:false };
-      h = prevHour(H);
-      m = MIN_BEFORE[minWord];
+      h = prevHour(H); m = MIN_BEFORE[minWord];
       return { h, m, valid:true };
     }
 
     return { valid:false };
   }
 
+  // ======= Finish / LearningView =======
+  function showResult(){
+    quizScreen.classList.add("hidden");
+    resultScreen.classList.remove("hidden");
+
+    resultText.innerHTML =
+      `du hast <strong>${TOTAL_TASKS}</strong> aufgaben gemacht.<br>` +
+      `richtig gelöst: <strong>${correctCount}</strong>.`;
+  }
+
+  btnFinish.addEventListener("click", () => {
+    btnFinish.disabled = true;
+    btnFinish.textContent = "erledigt ✔";
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage("AppSolved", "*");
+      }
+    } catch (e) {
+      console.warn("LearningView-AppSolved nicht möglich:", e);
+    }
+  });
+
   // ======= Check =======
   function check(){
-    const minWord = document.getElementById("sel-min").value;   // may be ""
-    const formWord = document.getElementById("sel-form").value; // always set
-    const hourWord = document.getElementById("sel-hour").value;
-
-    const fb = document.getElementById("feedback");
-    const hint = document.getElementById("hint");
+    const minWord = selMin.value;     // may be ""
+    const formWord = selForm.value;
+    const hourWord = selHour.value;
 
     const sel = selectionToTime(minWord, formWord, hourWord);
 
@@ -306,23 +380,31 @@
     const ok = (sel.h === current.h && sel.m === current.m);
 
     if(ok){
+      correctCount++;
       fb.textContent = "richtig ✔";
       fb.className = "feedback ok";
-      // next task shortly
-      setTimeout(newTask, 600);
+
+      taskIndex++;
+      if(taskIndex >= TOTAL_TASKS){
+        setTimeout(showResult, 400);
+      } else {
+        setTimeout(newTask, 600);
+      }
     } else {
       fb.textContent = "falsch ✘";
       fb.className = "feedback bad";
-      // (absichtlich) keine Lösung anzeigen – nur Hinweis
       hint.textContent = "tipp: bei „halb / vor halb / nach halb“ ist die genannte stunde die nächste stunde.";
     }
   }
 
-  // ======= Events =======
-  document.getElementById("btn-check").addEventListener("click", check);
+  btnCheck.addEventListener("click", check);
 
-  // initial
-  newTask();
+  // ======= Start =======
+  (function init(){
+    taskIndex = 0;
+    correctCount = 0;
+    newTask();
+  })();
 </script>
 </body>
 </html>
